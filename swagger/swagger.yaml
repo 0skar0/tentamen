@@ -28,7 +28,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ResponsePosts"
+                $ref: "#/components/schemas/ResponseListings"
         default:
           description: unexpected error
           content:
@@ -53,7 +53,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ResponsePost"
+                $ref: "#/components/schemas/ResponseListing"
         default:
           description: unexpected error
           content:
@@ -79,14 +79,26 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Post"
+              $ref: "#/components/schemas/Listing"
       responses:
         '200':
           description: The replaced listing
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ResponsePost"
+                $ref: "#/components/schemas/ResponseListing"
+        '201':
+          description: The replaced listing
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseListing"
+        '204':
+          description: No change
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseListing"
         default:
           description: unexpected error
           content:
@@ -112,7 +124,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ResponsePost"
+                $ref: "#/components/schemas/ResponseListing"
         '204':
           description: No change (nothing was deleted)
         default:
@@ -125,7 +137,7 @@ paths:
 
 components:
   schemas:
-    Post:
+    Listing:
       type: object
       properties:
         type:
@@ -153,19 +165,17 @@ components:
               type: integer
             lon:
               type: integer
-    ResponsePost:
+    ResponseListing:
       allOf:
-      - $ref: "#/components/schemas/Post"
+      - $ref: "#/components/schemas/Listing"
       - properties:
-          id:
-            type: integer
           _id:
             type: string
             format: uuid
-    ResponsePosts:
+    ResponseListings:
       type: array
       items:
-        $ref: "#/components/schemas/ResponsePost"
+        $ref: "#/components/schemas/ResponseListing"
     Error:
       required:
         - code
