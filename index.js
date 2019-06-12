@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require('cors');
 
 const routes = require("./routes")
 const db = require("./models")
@@ -10,6 +11,7 @@ const port = process.env.PORT || 3000;
 
 // Add middleware for parsing the body to req.body
 // middlewares are executed in the order added, so add before routes
+app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 

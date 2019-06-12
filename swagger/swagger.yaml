@@ -11,61 +11,177 @@ servers:
 paths:
   /listings:
     get:
-      summary: Lists all listings
-      operationId: listListings
+      summary: Show all listings
+      operationId: listings
       tags:
       - listings
+      parameters:
+      - name: Type
+        in: query
+        description: filter by query type
+        required: false
+        schema:
+          type: integer
+          format: int32
       responses:
         '200':
           description: Array of listings
           content:
-            application/json:    
+            application/json:
               schema:
-                $ref: "#/components/schemas/ResponseListings"
+                $ref: "#/components/schemas/ResponsePosts"
         default:
           description: unexpected error
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
+    post:
+      summary: Create one listings
+      operationId: createListing
+      tags:
+      - listings
+      requestBody:
+        description: the listing to create
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Post'
+      responses:
+        '201':
+          description: The created post
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponsePost"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /listings/{postId}:
+    get:
+      summary: Get a Post
+      operationId: getPost
+      tags:
+        - listings
+      parameters:
+      - name: postId
+        in: path
+        description: post id
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: The found post
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponsePost"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    put:
+      summary: Replace a Post
+      operationId: putPost
+      tags:
+      - listings
+      parameters:
+      - name: postId
+        in: path
+        description: post id
+        required: true
+        schema:
+          type: integer
+          format: int32
+      requestBody:
+        description: the post to create
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Post'
+      responses:
+        '200':
+          description: The replaced post
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponsePost"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+    delete:
+      summary: Delete a Post
+      operationId: deletePost
+      tags:
+        - listings
+      parameters:
+      - name: postId
+        in: path
+        description: post id
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: The deleted post
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponsePost"
+        '204':
+          description: No change (nothing was deleted)
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
 components:
   schemas:
-    Listing:
+    Post:
       type: object
       properties:
-# Add properties for your listings here   
-    ResponseListing:
+        title:
+          type: string
+        body:
+          type: string
+        userId:
+          type: integer
+    ResponsePost:
       allOf:
-      - $ref: "#/components/schemas/Listing"
+      - $ref: "#/components/schemas/Post"
       - properties:
-          __v:
+          id:
             type: integer
-            format: uint32
           _id:
             type: string
             format: uuid
-    ResponseListings:
+    ResponsePosts:
       type: array
       items:
-        $ref: "#/components/schemas/ResponseListing"
+        $ref: "#/components/schemas/ResponsePost"
     Error:
       required:
-        - error
+        - code
+        - message
       properties:
-        error:
-          type: object
-          properties:
-            expose:
-              type: bool
-            statusCode:
-              type: integer
-              format: uint32
-            status:
-              type: integer
-              format: uint32
-            body:
-              title: body as escaped json
-              type: string
-            type:
-              title: fault desciption
-              type: string
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
