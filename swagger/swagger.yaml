@@ -16,13 +16,12 @@ paths:
       tags:
       - listings
       parameters:
-      - name: Type
+      - name: type
         in: query
         description: filter by query type
         required: false
         schema:
-          type: integer
-          format: int32
+          type: string
       responses:
         '200':
           description: Array of listings
@@ -37,7 +36,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
     post:
-      summary: Create one listings
+      summary: Create one listing
       operationId: createListing
       tags:
       - listings
@@ -62,35 +61,9 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
   /listings/{postId}:
-    get:
-      summary: Get a Post
-      operationId: getPost
-      tags:
-        - listings
-      parameters:
-      - name: postId
-        in: path
-        description: post id
-        required: true
-        schema:
-          type: integer
-          format: int32
-      responses:
-        '200':
-          description: The found post
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ResponsePost"
-        default:
-          description: unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
     put:
-      summary: Replace a Post
-      operationId: putPost
+      summary: Replace one listing
+      operationId: putListing
       tags:
       - listings
       parameters:
@@ -99,18 +72,17 @@ paths:
         description: post id
         required: true
         schema:
-          type: integer
-          format: int32
+          type: string
       requestBody:
-        description: the post to create
+        description: the listing to create
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Post'
+              $ref: "#/components/schemas/Post"
       responses:
         '200':
-          description: The replaced post
+          description: The replaced listing
           content:
             application/json:
               schema:
@@ -133,8 +105,7 @@ paths:
         description: post id
         required: true
         schema:
-          type: integer
-          format: int32
+          type: string
       responses:
         '200':
           description: The deleted post
@@ -151,17 +122,37 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
 
+
 components:
   schemas:
     Post:
       type: object
       properties:
-        title:
+        type:
           type: string
-        body:
-          type: string
-        userId:
+        price:
           type: integer
+        monthlyfee:
+          type: integer
+        active:
+          type: boolean
+        location:
+          type: object
+          properties:
+            city:
+              type: string
+            street:
+              type: string
+            number:
+              type: integer
+            municipality:
+              type: string
+            country:
+              type: string
+            lat:
+              type: integer
+            lon:
+              type: integer
     ResponsePost:
       allOf:
       - $ref: "#/components/schemas/Post"
